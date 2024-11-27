@@ -5,7 +5,7 @@ def leftPanel(self):
     self.Frame_left = Frame(self.Mainmenuroot, bg="#343434")
     self.Frame_left.place(x=0, y=0, width=250, height=int(self.height))
     self.time()
-    Button(self.Frame_left, text="Add Inventory", command=None, bd=0, font=("Goudy old style", 18),
+    Button(self.Frame_left, text="Add Inventory", command=self.addinventory, bd=0, font=("Goudy old style", 18),
            fg="white",
            bg="#343434").place(x=35, y=300)
     Button(self.Frame_left, text="Inventory Details", command=self.showinventorydetail, bd=0, font=("Goudy old style", 18),

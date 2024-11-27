@@ -1,4 +1,5 @@
 from tkinter import *
+from addinventory import AddInventoryPanel
 from mainmenuleft import leftPanel
 from mainmenushowtime import timeloop
 from mainmenutop import topPanel
@@ -77,7 +78,8 @@ class MainPage:
 
     # def getmemberinfo(self):
     #     GetfullInfo(self)
-
+    def addinventory(self):
+        AddInventoryPanel(self)
     def showinventorydetail(self):
         InventoryViewDetailsPanel(self)
     def showoutofstockdetails(self):
