@@ -35,7 +35,7 @@ class Welcome:
         # Get Started button
         Button(
             Frame_Welcome,
-            command=self.login_fuction,
+            command=self.login_function,
             # command='',  # Call function to run snapshot.py and object.py
                 # Call function to run snapshot.py and object.py
             text="Go to Login",
@@ -45,7 +45,7 @@ class Welcome:
             bg="#CF2F2F"
         ).place(x=500, y=350, width=200, height=50)
         
-    def login_fuction(self):
+    def login_function(self):
         self.close_window()
         Login(Tk())
 

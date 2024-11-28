@@ -5,7 +5,9 @@ from mainmenushowtime import timeloop
 from mainmenutop import topPanel
 from showinventorydetails import InventoryViewDetailsPanel
 from showoutofstockdetails import OutofStockInventoryViewDetailsPanel
+# from showpricedetails import PriceInventoryViewDetailsPanel
 from showpricedetails import PriceInventoryViewDetailsPanel
+from showpricedetailstable import Pricedetailstable
 from showpurchasedetails import PurchaseInventoryViewDetailsPanel
 
 
@@ -78,6 +80,7 @@ class MainPage:
 
     # def getmemberinfo(self):
     #     GetfullInfo(self)
+
     def addinventory(self):
         AddInventoryPanel(self)
     def showinventorydetail(self):
@@ -88,7 +91,8 @@ class MainPage:
         PriceInventoryViewDetailsPanel(self)
     def showpurchasedetails(self):
         PurchaseInventoryViewDetailsPanel(self)
-
+    def showpricedetailstable(self):
+         Pricedetailstable(self)
     # def showmemberinformation(self, monthsss):
     #     showmemberinfo(self, 1, self.monthss.get(), self.shiftss.get())
 
