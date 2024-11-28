@@ -19,20 +19,16 @@ def Pricedetailstable(self):
     self.mycanvas.configure(yscrollcommand=yscrollbar.set)
     self.Frame_Down.pack(fill="both", padx=10, pady=10, ipady=120)
     Label(self.myframe, text="M_ID", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(
+          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=1, sticky="ew", ipadx=80)
     Label(self.myframe, text="Name", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(
+          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=2, sticky="ew", ipadx=80)
     Label(self.myframe, text="Price", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(
+          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=3, sticky="ew", ipadx=80)
     Label(self.myframe, text="Action", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(row=0, column=5, sticky="ew")
-    Label(self.myframe, text="", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(row=0, column=6, sticky="ew")
-    Label(self.myframe, text="", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold")).grid(row=0, column=7, sticky="ew", ipadx=50)
+          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(row=0, column=5, columnspan=2, sticky="ew")
     conn = sqlite3.connect('db/inventory.db')
     c = conn.cursor()
     c.execute("SELECT * FROM inventory_price")
@@ -51,15 +47,15 @@ def Pricedetailstable(self):
         price_label = Label(self.myframe, text=self.inv_price_price, anchor="center",
                              background="#FFFFFF",
                              font=("Goudy old style", 12))
-        action_button = Button(self.myframe, text="View",
+        action_button = Button(self.myframe, text="Edit",
                                background="#FFFFFF", command=lambda nr=nr: self.fulldetailss(nr))
         action_button.place(width=10)
         action_button1 = Button(self.myframe, text="Delete", command=lambda nr=nr: self.delete(nr),
                                 background="#FFFFFF")
         action_button.place(width=10)
-        nr_label.grid(row=row, column=1, sticky="ew", ipady=10)
+        nr_label.grid(row=row, column=1, sticky="ew", ipady=10,)
         name_label.grid(row=row, column=2, sticky="ew")
         price_label.grid(row=row, column=3, sticky="ew")
-        action_button.grid(row=row, column=5, sticky="ew")
-        action_button1.grid(row=row, column=6, sticky="ew")
+        action_button.grid(row=row, column=5, sticky="ew", padx=5)  # View button
+        action_button1.grid(row=row, column=6, sticky="ew", padx=5,ipadx=5) 
         row = row + 1
