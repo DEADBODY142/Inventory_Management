@@ -1,6 +1,7 @@
 import sqlite3
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 
 
 def Pricedetailstable(self):
@@ -37,7 +38,7 @@ def Pricedetailstable(self):
     row = 1
     for k in range(self.lengthofdata):
         nr = self.datambr[k][0]
-        self.inv_price_id = self.datambr[k][0]
+        self.inv_price_id = k+1
         self.inv_price_name = self.datambr[k][1]
         self.inv_price_price = self.datambr[k][2]
         nr_label = Label(self.myframe, text=self.inv_price_id, anchor="center", background="#FFFFFF",
@@ -48,7 +49,7 @@ def Pricedetailstable(self):
                              background="#FFFFFF",
                              font=("Goudy old style", 12))
         action_button = Button(self.myframe, text="Edit",
-                               background="#FFFFFF", command=lambda nr=nr: self.fulldetailss(nr))
+                               background="#FFFFFF", command=lambda nr=nr: self.edit_price(nr))
         action_button.place(width=10)
         action_button1 = Button(self.myframe, text="Delete", command=lambda nr=nr: self.delete(nr),
                                 background="#FFFFFF")
@@ -59,3 +60,4 @@ def Pricedetailstable(self):
         action_button.grid(row=row, column=5, sticky="ew", padx=5)  # View button
         action_button1.grid(row=row, column=6, sticky="ew", padx=5,ipadx=5) 
         row = row + 1
+

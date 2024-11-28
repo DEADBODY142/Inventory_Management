@@ -9,7 +9,8 @@ from showoutofstockdetails import OutofStockInventoryViewDetailsPanel
 from showpricedetails import PriceInventoryViewDetailsPanel
 from showpricedetailstable import Pricedetailstable
 from showpurchasedetails import PurchaseInventoryViewDetailsPanel
-
+from tkinter import messagebox
+import sqlite3
 
 
 
@@ -93,6 +94,71 @@ class MainPage:
         PurchaseInventoryViewDetailsPanel(self)
     def showpricedetailstable(self):
          Pricedetailstable(self)
+    def delete(self, nr):
+        response = messagebox.askyesno("Delete", "Are you sure you want to delete this record?")
+        if response:
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM inventory_price WHERE id=?", (nr,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Success", "Record deleted successfully!")
+            
+            # Clear existing widgets in myframe
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+                
+            # Reload the table
+            self.showpricedetailstable()
+    def edit_price(self, nr):
+    # Create edit dialog window
+        edit_window = Toplevel()
+        edit_window.title("Edit Price Details")
+        edit_window.geometry("300x200")
+        edit_window.configure(bg="#FFFFFF")
+        
+        # Get current values from database
+        conn = sqlite3.connect('db/inventory.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM inventory_price WHERE id=?", (nr,))
+        current_data = c.fetchone()
+        conn.close()
+        
+        # Create entry fields
+        Label(edit_window, text="Name:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        name_entry = Entry(edit_window)
+        name_entry.insert(0, current_data[1])
+        name_entry.pack(pady=5)
+        
+        Label(edit_window, text="Price:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        price_entry = Entry(edit_window)
+        price_entry.insert(0, current_data[2])
+        price_entry.pack(pady=5)
+    
+        def save_changes():
+            new_name = name_entry.get()
+            new_price = price_entry.get()
+            
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("UPDATE inventory_price SET name=?, price=? WHERE id=?", 
+                    (new_name, new_price, nr))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record updated successfully!")
+            edit_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showpricedetailstable()
+    
+    # Save button
+        Button(edit_window, text="Save", command=save_changes, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+
+    
     # def showmemberinformation(self, monthsss):
     #     showmemberinfo(self, 1, self.monthss.get(), self.shiftss.get())
 
