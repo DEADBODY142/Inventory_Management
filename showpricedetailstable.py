@@ -21,15 +21,15 @@ def Pricedetailstable(self):
     self.Frame_Down.pack(fill="both", padx=10, pady=10, ipady=120)
     Label(self.myframe, text="M_ID", anchor="center", background="#FFFFFF",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
-        row=0, column=1, sticky="ew", ipadx=80)
+        row=0, column=1, sticky="ew", ipadx=120)
     Label(self.myframe, text="Name", anchor="center", background="#FFFFFF",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
-        row=0, column=2, sticky="ew", ipadx=80)
+        row=0, column=2, sticky="ew", ipadx=120)
     Label(self.myframe, text="Price", anchor="center", background="#FFFFFF",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
-        row=0, column=3, sticky="ew", ipadx=80)
+        row=0, column=3, sticky="ew", ipadx=120)
     Label(self.myframe, text="Action", anchor="center", background="#FFFFFF",
-          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(row=0, column=5, columnspan=2, sticky="ew")
+          font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(row=0, column=5, columnspan=2,ipadx=120, sticky="ew")
     conn = sqlite3.connect('db/inventory.db')
     c = conn.cursor()
     c.execute("SELECT * FROM inventory_price")
