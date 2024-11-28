@@ -12,7 +12,15 @@ def AddInventoryPanel(self):
     scan_button.place(x=-12,y=-200,relx=0.5, rely=0.5, anchor=CENTER)
 
 def run_snapshot():
-    subprocess.run(['python', 'snapshot.py'])
+    try:
+            # subprocess.run(["python", "Login.py"], check=True)  
+        # subprocess.run(["python", "snapshot.py"], check=True)  
+        
+        subprocess.run(["python", "build_scratch.py"], check=True)  
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred: {e}")
+    except FileNotFoundError as e:
+        print(f"Script not found: {e}")
 
 
 
