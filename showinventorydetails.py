@@ -79,7 +79,7 @@ def InventoryViewDetailsPanel(self):
     # Sample Data
     db_connection = sqlite3.connect('db/inventory.db')
     cursor = db_connection.cursor()
-    cursor.execute("SELECT * FROM inventory_stock")
+    cursor.execute("SELECT name,image_url,quantity,price FROM inventory_stock")
     inventory_details = cursor.fetchall()
     # data = [
     #     [1, "Laptop", 10, "$1200", "Electronics"],
@@ -92,9 +92,13 @@ def InventoryViewDetailsPanel(self):
     # Adding Table Rows
     for row_idx, row_data in enumerate(inventory_details, start=1):
         bg_color = "#F9F9F9" if row_idx % 2 == 0 else "#FFFFFF"
+        # First create the auto-increment column
+        Label(canvas, text=str(row_idx), font=("Goudy old style", 12), bg=bg_color, fg="#333333",
+            relief=GROOVE, padx=10, pady=5).grid(row=row_idx, column=0, sticky="nsew")
+    
         for col_idx, cell_data in enumerate(row_data):
             Label(canvas, text=cell_data, font=("Goudy old style", 12), bg=bg_color, fg="#333333",
-                  relief=GROOVE, padx=10, pady=5).grid(row=row_idx, column=col_idx, sticky="nsew")
+                relief=GROOVE, padx=10, pady=5).grid(row=row_idx, column=col_idx + 1, sticky="nsew")
     
     # Configuring column weights for uniform size
     for col in range(len(header)):

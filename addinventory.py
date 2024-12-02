@@ -16,7 +16,7 @@ def run_snapshot():
             # subprocess.run(["python", "Login.py"], check=True)  
         # subprocess.run(["python", "snapshot.py"], check=True)  
         
-        subprocess.run(["python", "build_scratch.py"], check=True)  
+        subprocess.run(["python", "add.py"], check=True)  
     except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
     except FileNotFoundError as e:

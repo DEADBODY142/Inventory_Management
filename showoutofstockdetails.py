@@ -1,3 +1,4 @@
+import sqlite3
 from tkinter import *
 
 def OutofStockInventoryViewDetailsPanel(self):
@@ -18,6 +19,52 @@ def OutofStockInventoryViewDetailsPanel(self):
     #       bg="#F98C6E").place(
     #     x=600, y=15)
     self.search.bind("<KeyRelease>",NONE)
+
+    
+    # Table Frame
+    Frame_Table = Frame(self.Frame_ViewMemberDetails, bg="white")
+    Frame_Table.place(x=0, y=70, width=950, height=880)
+
+    # Adding Canvas for Table
+    canvas = Canvas(Frame_Table, bg="white", bd=0, highlightthickness=0)
+    canvas.pack(side=LEFT, fill=BOTH, expand=True)
+
+    # Adding Table Header
+    header = ["ID", "Item Name", "Price"]
+    header_bg = "#F98C6E"
+    header_fg = "#FFFFFF"
+    for col, text in enumerate(header):
+        Label(canvas, text=text, font=("Goudy old style", 12, "bold"), bg=header_bg, fg=header_fg,
+              relief=GROOVE, padx=10, pady=5).grid(row=0, column=col, sticky="nsew")
+
+    # Sample Data
+    db_connection = sqlite3.connect('db/inventory.db')
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT name,price FROM inventory_stock where quantity=?",(0,))
+    inventory_details = cursor.fetchall()
+    # data = [
+    #     [1, "Laptop", 10, "$1200", "Electronics"],
+    #     [2, "Table", 5, "$150", "Furniture"],
+    #     [3, "Notebook", 50, "$2", "Stationery"],
+    #     [4, "Smartphone", 25, "$800", "Electronics"],
+    #     [5, "Chair", 15, "$50", "Furniture"]
+    # ]
+    
+     # Adding Table Rows
+    for row_idx, row_data in enumerate(inventory_details, start=1):
+        bg_color = "#F9F9F9" if row_idx % 2 == 0 else "#FFFFFF"
+        # First create the auto-increment column
+        Label(canvas, text=str(row_idx), font=("Goudy old style", 12), bg=bg_color, fg="#333333",
+            relief=GROOVE, padx=10, pady=5).grid(row=row_idx, column=0, sticky="nsew")
+    
+        for col_idx, cell_data in enumerate(row_data):
+            Label(canvas, text=cell_data, font=("Goudy old style", 12), bg=bg_color, fg="#333333",
+                relief=GROOVE, padx=10, pady=5).grid(row=row_idx, column=col_idx + 1, sticky="nsew")
+    
+    # Configuring column weights for uniform size
+    for col in range(len(header)):
+        canvas.grid_columnconfigure(col, weight=1)
+    # todo: quantity 0 show
     # options = [
     #     "....",
     #     "1month",
