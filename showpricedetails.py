@@ -17,7 +17,38 @@ def PriceInventoryViewDetailsPanel(self):
     # Label(Frame_Top, text="Month", font=("Goudy old style", 12, "bold"), fg="#FFFFFF",
     #       bg="#F98C6E").place(
     #     x=600, y=15)
-    self.search.bind("<KeyRelease>",NONE)
+    # self.search.bind("<KeyRelease>",NONE)
+    self.search.bind("<KeyRelease>", self.search_records)
+
+# Add this new function
+# def search_records(self, event):
+#     search_term = self.search.get()
+    
+#     # Connect to database
+#     conn = sqlite3.connect('db/inventory.db')
+#     cursor = conn.cursor()
+    
+#     # Search in both name and price fields
+#     cursor.execute("""SELECT * FROM inventory_price 
+#                      WHERE name LIKE ? OR price LIKE ?""", 
+#                      ('%'+search_term+'%', '%'+search_term+'%'))
+    
+#     search_results = cursor.fetchall()
+#     conn.close()
+    
+#     # Clear existing table
+#     for widget in self.myframe.winfo_children():
+#         widget.destroy()
+        
+#     # Rebuild table with search results
+#     self.showpricedetailstable(search_results)
+
+ # Add this after the search bar placement
+    search_button = Button(Frame_Top, text="Add", font=("Goudy old style", 12), 
+                          bg="#FFFFFF", fg="#F98C6E",
+                          cursor="hand2",command=self.add)
+    search_button.place(x=760, y=15, width=80, height=30)
+
     # options = [
     #     "....",
     #     "1month",

@@ -94,6 +94,45 @@ class MainPage:
         PurchaseInventoryViewDetailsPanel(self)
     def showpricedetailstable(self):
          Pricedetailstable(self)
+    
+    def add(self):
+        add_window = Toplevel()
+        add_window.title("Add Price Details")
+        add_window.geometry("300x200")
+        add_window.configure(bg="#FFFFFF")
+        
+        # Create entry fields
+        Label(add_window, text="Name:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        name_entry = Entry(add_window)
+        name_entry.pack(pady=5)
+        
+        Label(add_window, text="Price:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        price_entry = Entry(add_window)
+        price_entry.pack(pady=5)
+
+        def save_new_record():
+            new_name = name_entry.get()
+            new_price = price_entry.get()
+            
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO inventory_price (name, price) VALUES (?, ?)", 
+                    (new_name, new_price))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record added successfully!")
+            add_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showpricedetailstable()
+
+        # Save button
+        Button(add_window, text="Save", command=save_new_record, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+        
     def delete(self, nr):
         response = messagebox.askyesno("Delete", "Are you sure you want to delete this record?")
         if response:
