@@ -1,13 +1,21 @@
 from tkinter import *
+from tkinter.ttk import Combobox
 from addinventory import AddInventoryPanel
 from mainmenuleft import leftPanel
 from mainmenushowtime import timeloop
 from mainmenutop import topPanel
+from qrscanner import display_qr
 from showinventorydetails import InventoryViewDetailsPanel
+from showinventorydetailstable import Inventorydetailstable
 from showoutofstockdetails import OutofStockInventoryViewDetailsPanel
+from showoutofstockinventorydetailstable import OutofStockInventorydetailstable
 from showpricedetails import PriceInventoryViewDetailsPanel
+from showpricedetailstable import Pricedetailstable
 from showpurchasedetails import PurchaseInventoryViewDetailsPanel
+from tkinter import messagebox
+import sqlite3
 
+from showsalesdetails import SalesInventoryViewDetailsPanel
 
 
 
@@ -29,6 +37,7 @@ class MainPage:
         self.height = "650"
         self.mbmrid = ""
         self.lst=[]
+       
         self.count=-1
         self.Mainmenuroot.geometry(self.width + "x" + self.height + "+100+30")
         self.Mainmenuroot.resizable(False, False)
@@ -36,10 +45,6 @@ class MainPage:
         self.month = ""
         self.left()
         self.top()
-        # self.deactivembr()
-        # self.sendmain()
-        # self.dashboard()
-
 
     def left(self):
         leftPanel(self)
@@ -50,34 +55,14 @@ class MainPage:
     def top(self):
         topPanel(self)
 
-    # def dashboard(self):
-    #     DashBoardPanel(self)
 
     def logout(self):
         self.close_window_mainmenu()
         from login import Login
         Login(Tk())
 
-    # def myprofile(self):
-    #     ProfilePanel(self)
-
-    # def addmembers(self):
-    #     AddMemberPanel(self)
-
-    # def inputvalidation(self):
-    #     memberformvalidation(self)
-
-    # def addpaymentdetails(self):
-    #     AddMemberPaymentPanel(self)
-
-    # def getdatefrom(self):
-    #     getdatefrommember(self)
-
-    # def getdateto(self):
-    #     getdatetomember(self)
-
-    # def getmemberinfo(self):
-    #     GetfullInfo(self)
+    def showsalesdetails(self):
+        SalesInventoryViewDetailsPanel(self)
     def addinventory(self):
         AddInventoryPanel(self)
     def showinventorydetail(self):
@@ -88,59 +73,225 @@ class MainPage:
         PriceInventoryViewDetailsPanel(self)
     def showpurchasedetails(self):
         PurchaseInventoryViewDetailsPanel(self)
+    def showpricedetailstable(self):
+         Pricedetailstable(self)
 
-    # def showmemberinformation(self, monthsss):
-    #     showmemberinfo(self, 1, self.monthss.get(), self.shiftss.get())
+    def showinventorydetails(self):
+        InventoryViewDetailsPanel(self)
+    
+    def showinventorydetailstable(self):
+         Inventorydetailstable(self)
 
-    # def fulldetailss(self, num):
-    #     fulldetails(self, num)
-    # def sendmain(self):
-    #     sendmail(self)
-    # def delete(self, num):
-    #     memberdelete(self, num)
+    def showoutofstockinventorydetailtable(self):
+         OutofStockInventorydetailstable(self)
+    
 
-    # def paymentdetials(self):
-    #     PaymentPanel(self)
+    
+    def add(self):
+        add_window = Toplevel()
+        add_window.title("Add Price Details")
+        add_window.geometry("300x200")
+        add_window.configure(bg="#FFFFFF")
+        
+        # Create entry fields
+        Label(add_window, text="Name:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        name_entry = Entry(add_window)
+        name_entry.pack(pady=5)
+        
+        Label(add_window, text="Price:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        price_entry = Entry(add_window)
+        price_entry.pack(pady=5)
 
-    # def updtepayment(self, num):
-    #     UpdatePayments(self, num)
+        def save_new_record():
+            new_name = name_entry.get()
+            new_price = price_entry.get()
+            if not new_price.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("INSERT INTO inventory_price (name, price) VALUES (?, ?)", 
+                    (new_name, new_price))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record added successfully!")
+            add_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showpricedetailstable()
 
-    # def updatedb(self):
-    #     updateintodb(self)
+        # Save button
+        Button(add_window, text="Save", command=save_new_record, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+        
+    def delete(self, nr):
+        response = messagebox.askyesno("Delete", "Are you sure you want to delete this record?")
+        if response:
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM inventory_price WHERE id=?", (nr,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Success", "Record deleted successfully!")
+            
+            # Clear existing widgets in myframe
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+                
+            # Reload the table
+            self.showpricedetailstable()
+    def delete_inventory(self, nr):
+        response = messagebox.askyesno("Delete", "Are you sure you want to delete this record?")
+        if response:
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM inventory_stock WHERE id=?", (nr,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Success", "Record deleted successfully!")
+            
+            # Clear existing widgets in myframe
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+                
+            # Reload the table
+            self.showinventorydetailstable()
+    def edit_price(self, nr):
+    # Create edit dialog window
+        edit_window = Toplevel()
+        edit_window.title("Edit Price Details")
+        edit_window.geometry("300x200")
+        edit_window.configure(bg="#FFFFFF")
+        
+        # Get current values from database
+        conn = sqlite3.connect('db/inventory.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM inventory_price WHERE id=?", (nr,))
+        current_data = c.fetchone()
+        conn.close()
+        
+        # Create entry fields
+        Label(edit_window, text="Name:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        name_entry = Entry(edit_window)
+        name_entry.insert(0, current_data[1])
+        name_entry.pack(pady=5)
+        
+        Label(edit_window, text="Price:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        price_entry = Entry(edit_window)
+        price_entry.insert(0, current_data[2])
+        price_entry.pack(pady=5)
+    
+        def save_changes():
+            new_name = name_entry.get()
+            new_price = price_entry.get()
+            if not new_price.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("UPDATE inventory_price SET name=?, price=? WHERE id=?", 
+                    (new_name, new_price, nr))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record updated successfully!")
+            edit_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showpricedetailstable()
+    
+    # Save button
+        Button(edit_window, text="Save", command=save_changes, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+    def edit_inventory(self, nr):
+    # Create edit dialog window
+        edit_window = Toplevel()
+        edit_window.title("Edit Quantity Details")
+        edit_window.geometry("300x100")
+        edit_window.configure(bg="#FFFFFF")
+        
+        # Get current values from database
+        conn = sqlite3.connect('db/inventory.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM inventory_stock WHERE id=?", (nr,))
+        current_data = c.fetchone()
+        
+        conn.close()
+        
+        # Create entry fields
+        Label(edit_window, text="Quantity:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        quantity_entry = Entry(edit_window)
+        quantity_entry.insert(0, current_data[3])
+        quantity_entry.pack(pady=5)
+    
+        def save_changes():
+            new_quantity = quantity_entry.get()
 
-    # def updategetdatefrom(self):
-    #     updategetdatefrommember(self)
+            if not new_quantity.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("UPDATE inventory_stock SET quantity=? WHERE id=?", 
+                    (new_quantity, nr))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record updated successfully!")
+            edit_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showinventorydetailstable()
+    
+    # Save button
+        Button(edit_window, text="Save", command=save_changes, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
 
-    # def updategetdateto(self):
-    #     updategetdatetomember(self)
-
-    # def attendnce(self):
-    #     AttendencePanel(self)
-
-    # def showattendence(self, monthsss):
-    #     showmemberattendence(self, 1, self.shiftsss.get())
-
-    # def presentmemberss(self, num):
-    #     presentmembers(self, num)
-
-    # def deactivembr(self):
-    #     deactivatemember(self)
-
-    # def makesearch(self,event):
-    #     SearchMember(self,event)
-    #     SerchMemberDetials(self,self.lst)
-    # def updateaftrasbnt(self,num):
-    #     UpdatePaymentAfterAbsent(self, num)
-
-    # def updatedbs(self):
-    #     updateintodbss(self)
-    # def updategetdatefromabsnts(self):
-    #     updategetdatefrommemberabsnt(self)
-
-    # def updategetdatetoabsnts(self):
-    #     updategetdatetomemberabsnt(self)
+    
 
     def close_window_mainmenu(self):
         self.Mainmenuroot.destroy()
+    
+    def sales_inventory(self,nr,quantity):
+        print(nr, quantity)
+        add_window = Toplevel()
+        add_window.title("Purchase")
+        add_window.geometry("300x200")
+        add_window.configure(bg="#FFFFFF")
+        
+        # Create entry fields
+        options = ["Select Quantity"] 
+        for i in range(1, quantity+1):  # Example loop to add quantities from 1 to 10
+            options.append(i) # Dropdown options
+        dropdown =Combobox(add_window, values=options, state="readonly")
+        dropdown.pack(pady=20)
+        dropdown.current(0)  
+
+        def save_new_record():
+            selected_value = dropdown.get()
+            if(selected_value == "Select Quantity"):
+                add_window.destroy()
+                messagebox.showerror("Error", "Please select a quantity")
+               
+            else:
+                add_window.destroy()
+                self.qr_window = Toplevel()
+                self.qr_window.title("QR Code Display")
+                display_qr(self.qr_window, selected_value,nr)
+
+
+        # Save button
+        Button(add_window, text="Save", command=save_new_record, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+        
+    def destroy_qr_window(self):
+        self.qr_window.destroy()
 
 

@@ -11,7 +11,7 @@ def leftPanel(self):
     Button(self.Frame_left, text="Inventory Details", command=self.showinventorydetail, bd=0, font=("Goudy old style", 18),
            fg="white",
            bg="#343434").place(x=35, y=350)
-    Button(self.Frame_left, text="Purchase Inventory", command=self.showpurchasedetails, bd=0, font=("Goudy old style", 18),
+    Button(self.Frame_left, text="Sales", command=self.showsalesdetails, bd=0, font=("Goudy old style", 18),
            fg="white",
            bg="#343434").place(x=35, y=400)
     Button(self.Frame_left, text="OOS Inventory", bd=0, command=self.showoutofstockdetails, font=("Goudy old style", 18),

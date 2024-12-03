@@ -31,8 +31,8 @@ while True:
             cv2.imwrite(filename, frame)
             print(f"Snapshot saved as '{filename}'.")
             break
-        if cv2.getWindowProperty('Press S to take snapshot', cv2.WND_PROP_VISIBLE) < 1:
-            break
+        # if cv2.getWindowProperty('Press S to take snapshot', cv2.WND_PROP_VISIBLE) < 1:
+        #     break
         
         # Break the loop if 'q' is pressed
         # elif key == ord('q'):

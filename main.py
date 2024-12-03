@@ -1,9 +1,6 @@
 from tkinter import *
 
 from login import Login
-# from PIL import ImageTk
-# import subprocess  # For running external scripts
-# from Login import Login
 
 
 class Welcome:
@@ -14,9 +11,6 @@ class Welcome:
         # Disable resizing
         self.root.resizable(False, False)
 
-        # Uncomment and use the following lines if you have a background image:
-        # self.bg = ImageTk.PhotoImage(file="path_to_your_image.jpg")  # Replace with your image path
-        # Label(self.root, image=self.bg).place(x=0, y=0, relwidth=1, relheight=1)
 
         # Welcome frame
         Frame_Welcome = Frame(self.root, bg="#F1D9D9")
@@ -35,7 +29,7 @@ class Welcome:
         # Get Started button
         Button(
             Frame_Welcome,
-            command=self.login_fuction,
+            command=self.login_function,
             # command='',  # Call function to run snapshot.py and object.py
                 # Call function to run snapshot.py and object.py
             text="Go to Login",
@@ -45,7 +39,7 @@ class Welcome:
             bg="#CF2F2F"
         ).place(x=500, y=350, width=200, height=50)
         
-    def login_fuction(self):
+    def login_function(self):
         self.close_window()
         Login(Tk())
 

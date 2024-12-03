@@ -4,10 +4,7 @@ import pandas as p
 from datetime import datetime
 from PIL import ImageTk,Image
 import sqlite3
-
 from mainmenu import MainPage
-# from forgetpass import ForgetPass
-# from MainPage import MainPage
 
 
 class Login:
@@ -60,66 +57,6 @@ class Login:
 
         else:
             messagebox.showerror("Error", "Invalid username or password", parent=self.root)
-    #     file = p.read_csv('../Data/login.csv')
-    #     self.usrname = file.username
-    #     self.passwrd = file.password
-    #     self.length = len(file)
-    #     self.flag = 0
-    #     self.user = self.username.get()
-    #     self.pas = self.password.get()
-    #     self.loops()
-
-    # def loops(self):
-    #     for i in range(self.length):
-    #         print(self.usrname[i],self.passwrd[i])
-    #         # ans=self.user == self.usrname[i] or self.pas == self.passwrd[i]
-    #         # print (ans)
-    #         if self.user == self.usrname[i] and self.pas == self.passwrd[i]:
-    #             self.flag = 1
-    #         if self.user == "" or self.pas == "":
-    #             self.flag = 2
-    #     print(self.flag)
-    #     print(self.user, self.pas)
-    #     self.check()
-
-    # def check(self):
-    #     print(self.flag)
-    #     if self.flag==2:
-    #         messagebox.showerror("Error", "All field are required", parent=self.root)
-    #         Login(self.root)
-    #     if self.flag==0:
-    #         messagebox.showerror("Error", "Invalid Username or Password", parent=self.root)
-    #         Login(self.root)
-    #     if self.flag==1:
-    #         self.close_window()
-    #         self.markAttendence(self.user)
-    #         with open('../Record/login.csv', 'w') as fi:
-    #             fi.writelines('Username\n')
-    #             fi.writelines(self.user)
-    #             fi.close()
-    #         MainPage(Tk(),self.user)
-
-    # def markAttendence(self, name):
-    #     with open('../Record/Attendence.csv', 'r+') as f:
-    #         mydataList = f.readlines()
-    #         namelist = []
-    #         print(mydataList)
-    #         for line in mydataList:
-    #             entry = line.split(',')
-    #             namelist.append(entry[0])
-    #         if name not in namelist:
-    #             now = datetime.now()
-    #             dtString = now.strftime('%H:%M%S')
-    #             f.writelines(f'\n{name},{dtString}')
 
     def close_window(self):
         self.root.destroy()
-
-    # def camera(self):
-    #     self.close_window()
-    #     FaceReco(True)
-
-
-    # def checkpass(self):
-    #     # self.close_window()
-    #     ForgetPass(True)
