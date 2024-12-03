@@ -19,19 +19,19 @@ def Inventorydetailstable(self):
     yscrollbar.pack(fill="y", side=RIGHT)
     self.mycanvas.configure(yscrollcommand=yscrollbar.set)
     self.Frame_Down.pack(fill="both", padx=10, pady=10, ipady=120)
-    Label(self.myframe, text="ID", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="ID", anchor="center", background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=1, sticky="ew", ipadx=20)
-    Label(self.myframe, text="Item", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Item", anchor="center", background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=2, sticky="ew", ipadx=100)
-    Label(self.myframe, text="Quantity", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Quantity", anchor="center", background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=3, sticky="ew", ipadx=55)
-    Label(self.myframe, text="Price", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Price", anchor="center", background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=4, sticky="ew", ipadx=55)
-    Label(self.myframe, text="Action", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Action", anchor="center", background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(row=0, column=5, columnspan=3,ipadx=120, sticky="ew")
     conn = sqlite3.connect('db/inventory.db')
     c = conn.cursor()
@@ -56,12 +56,12 @@ def Inventorydetailstable(self):
                              background="#FFFFFF",
                              font=("Goudy old style", 12))
         action_button = Button(self.myframe, text="Edit",
-                               background="#FFFFFF", command=lambda nr=nr: self.edit_price(nr))
+                               background="#FFFFFF", command=lambda nr=nr: self.edit_inventory(nr))
         action_button.place(width=5)
         action_button2 = Button(self.myframe, text="Purchase", command=lambda nr=nr, qty=self.inv_quantity: self.sales_inventory(nr,qty),
                                 background="#FFFFFF")
         action_button.place(width=5)
-        action_button1 = Button(self.myframe, text="Delete", command=lambda nr=nr: self.delete(nr),
+        action_button1 = Button(self.myframe, text="Delete", command=lambda nr=nr: self.delete_inventory(nr),
                                 background="#FFFFFF")
         action_button.place(width=5)
         nr_label.grid(row=row, column=1, sticky="ew", ipady=10,)

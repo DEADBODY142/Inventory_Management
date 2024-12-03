@@ -30,13 +30,5 @@ def display_qr(root,quantity,id):
     label = tk.Label(root, image=qr_image)
     label.image = qr_image  # Keep a reference to avoid garbage collection
     label.pack()
-# Create Tkinter window
-# root = tk.Tk()
-# root.title("QR Code Display")
 
-# # Add a button to generate and display the QR code
-# button = tk.Button(root, text="Generate QR Code", command=display_qr)
-# button.pack()
-
-# root.mainloop()
 

@@ -26,19 +26,19 @@ def SalesInventoryViewDetailsPanel(self):
     yscrollbar.pack(fill="y", side=RIGHT)
     self.mycanvas.configure(yscrollcommand=yscrollbar.set)
     self.Frame_Down.pack(fill="both", padx=10, pady=10, ipady=120)
-    Label(self.myframe, text="ID", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="ID", anchor="center",background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=1, sticky="ew", ipadx=70)
-    Label(self.myframe, text="Item", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Item", anchor="center",background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=2, sticky="ew", ipadx=70)
-    Label(self.myframe, text="Quantity", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Quantity", anchor="center",background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=3, sticky="ew", ipadx=70)
-    Label(self.myframe, text="Price", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Price", anchor="center",background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=4, sticky="ew", ipadx=70)
-    Label(self.myframe, text="Date", anchor="center", background="#FFFFFF",
+    Label(self.myframe, text="Date", anchor="center",background="#f98c6e",fg="white",
           font=("Goudy old style", 12, "bold"), bd=1, relief="solid").grid(
         row=0, column=5, sticky="ew", ipadx=70)
     conn = sqlite3.connect('db/inventory.db')

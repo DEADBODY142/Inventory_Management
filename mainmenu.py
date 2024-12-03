@@ -105,7 +105,9 @@ class MainPage:
         def save_new_record():
             new_name = name_entry.get()
             new_price = price_entry.get()
-            
+            if not new_price.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
             conn = sqlite3.connect('db/inventory.db')
             c = conn.cursor()
             c.execute("INSERT INTO inventory_price (name, price) VALUES (?, ?)", 
@@ -141,6 +143,22 @@ class MainPage:
                 
             # Reload the table
             self.showpricedetailstable()
+    def delete_inventory(self, nr):
+        response = messagebox.askyesno("Delete", "Are you sure you want to delete this record?")
+        if response:
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("DELETE FROM inventory_stock WHERE id=?", (nr,))
+            conn.commit()
+            conn.close()
+            messagebox.showinfo("Success", "Record deleted successfully!")
+            
+            # Clear existing widgets in myframe
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+                
+            # Reload the table
+            self.showinventorydetailstable()
     def edit_price(self, nr):
     # Create edit dialog window
         edit_window = Toplevel()
@@ -169,7 +187,9 @@ class MainPage:
         def save_changes():
             new_name = name_entry.get()
             new_price = price_entry.get()
-            
+            if not new_price.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
             conn = sqlite3.connect('db/inventory.db')
             c = conn.cursor()
             c.execute("UPDATE inventory_price SET name=?, price=? WHERE id=?", 
@@ -184,6 +204,51 @@ class MainPage:
             for widget in self.myframe.winfo_children():
                 widget.destroy()
             self.showpricedetailstable()
+    
+    # Save button
+        Button(edit_window, text="Save", command=save_changes, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+    def edit_inventory(self, nr):
+    # Create edit dialog window
+        edit_window = Toplevel()
+        edit_window.title("Edit Quantity Details")
+        edit_window.geometry("300x100")
+        edit_window.configure(bg="#FFFFFF")
+        
+        # Get current values from database
+        conn = sqlite3.connect('db/inventory.db')
+        c = conn.cursor()
+        c.execute("SELECT * FROM inventory_stock WHERE id=?", (nr,))
+        current_data = c.fetchone()
+        
+        conn.close()
+        
+        # Create entry fields
+        Label(edit_window, text="Quantity:", bg="#FFFFFF", font=("Goudy old style", 12)).pack(pady=5)
+        quantity_entry = Entry(edit_window)
+        quantity_entry.insert(0, current_data[3])
+        quantity_entry.pack(pady=5)
+    
+        def save_changes():
+            new_quantity = quantity_entry.get()
+
+            if not new_quantity.isdigit():
+                messagebox.showerror("Invalid Input", "Please enter a valid whole number for the quantity.")
+                return
+            conn = sqlite3.connect('db/inventory.db')
+            c = conn.cursor()
+            c.execute("UPDATE inventory_stock SET quantity=? WHERE id=?", 
+                    (new_quantity, nr))
+            conn.commit()
+            conn.close()
+            
+            messagebox.showinfo("Success", "Record updated successfully!")
+            edit_window.destroy()
+            
+            # Refresh the table
+            for widget in self.myframe.winfo_children():
+                widget.destroy()
+            self.showinventorydetailstable()
     
     # Save button
         Button(edit_window, text="Save", command=save_changes, 

@@ -39,7 +39,7 @@ def run_query():
             
             # Commit the insert
             conn.commit()
-            return "Sucessfully Purchase", 200
+            return "Sucessfully Purchased", 200
     except Exception as e:
         return {"error": str(e)}, 500
     finally:
