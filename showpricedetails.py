@@ -11,14 +11,14 @@ def PriceInventoryViewDetailsPanel(self):
     # Label(Frame_Top, text="Search", font=("Goudy old style", 12, "bold"), fg="#FFFFFF",
     #       bg="#F98C6E").place(
     #     x=300, y=15)
-    self.search = Entry(Frame_Top, font=("Goudy old style", 15), bg="#FFF9F9", highlightcolor="#EA7676",
-                        highlightbackground="#EA7676", highlightthickness=1)
-    self.search.place(x=250, y=15, width=500, height=30)
-    # Label(Frame_Top, text="Month", font=("Goudy old style", 12, "bold"), fg="#FFFFFF",
-    #       bg="#F98C6E").place(
-    #     x=600, y=15)
+    # self.search = Entry(Frame_Top, font=("Goudy old style", 15), bg="#FFF9F9", highlightcolor="#EA7676",
+    #                     highlightbackground="#EA7676", highlightthickness=1)
+    # self.search.place(x=250, y=15, width=500, height=30)
+    # # Label(Frame_Top, text="Month", font=("Goudy old style", 12, "bold"), fg="#FFFFFF",
+    # #       bg="#F98C6E").place(
+    # #     x=600, y=15)
     # self.search.bind("<KeyRelease>",NONE)
-    self.search.bind("<KeyRelease>", self.search_records)
+    # self.search.bind("<KeyRelease>", self.search_records)
 
 # Add this new function
 # def search_records(self, event):
@@ -47,7 +47,7 @@ def PriceInventoryViewDetailsPanel(self):
     search_button = Button(Frame_Top, text="Add", font=("Goudy old style", 12), 
                           bg="#FFFFFF", fg="#F98C6E",
                           cursor="hand2",command=self.add)
-    search_button.place(x=760, y=15, width=80, height=30)
+    search_button.place(x=850, y=15, width=80, height=30)
 
     # options = [
     #     "....",

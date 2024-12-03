@@ -1,16 +1,21 @@
 from tkinter import *
+from tkinter.ttk import Combobox
 from addinventory import AddInventoryPanel
 from mainmenuleft import leftPanel
 from mainmenushowtime import timeloop
 from mainmenutop import topPanel
+from qrscanner import display_qr
 from showinventorydetails import InventoryViewDetailsPanel
+from showinventorydetailstable import Inventorydetailstable
 from showoutofstockdetails import OutofStockInventoryViewDetailsPanel
-# from showpricedetails import PriceInventoryViewDetailsPanel
+from showoutofstockinventorydetailstable import OutofStockInventorydetailstable
 from showpricedetails import PriceInventoryViewDetailsPanel
 from showpricedetailstable import Pricedetailstable
 from showpurchasedetails import PurchaseInventoryViewDetailsPanel
 from tkinter import messagebox
 import sqlite3
+
+from showsalesdetails import SalesInventoryViewDetailsPanel
 
 
 
@@ -32,6 +37,7 @@ class MainPage:
         self.height = "650"
         self.mbmrid = ""
         self.lst=[]
+       
         self.count=-1
         self.Mainmenuroot.geometry(self.width + "x" + self.height + "+100+30")
         self.Mainmenuroot.resizable(False, False)
@@ -39,10 +45,6 @@ class MainPage:
         self.month = ""
         self.left()
         self.top()
-        # self.deactivembr()
-        # self.sendmain()
-        # self.dashboard()
-
 
     def left(self):
         leftPanel(self)
@@ -53,35 +55,14 @@ class MainPage:
     def top(self):
         topPanel(self)
 
-    # def dashboard(self):
-    #     DashBoardPanel(self)
 
     def logout(self):
         self.close_window_mainmenu()
         from login import Login
         Login(Tk())
 
-    # def myprofile(self):
-    #     ProfilePanel(self)
-
-    # def addmembers(self):
-    #     AddMemberPanel(self)
-
-    # def inputvalidation(self):
-    #     memberformvalidation(self)
-
-    # def addpaymentdetails(self):
-    #     AddMemberPaymentPanel(self)
-
-    # def getdatefrom(self):
-    #     getdatefrommember(self)
-
-    # def getdateto(self):
-    #     getdatetomember(self)
-
-    # def getmemberinfo(self):
-    #     GetfullInfo(self)
-
+    def showsalesdetails(self):
+        SalesInventoryViewDetailsPanel(self)
     def addinventory(self):
         AddInventoryPanel(self)
     def showinventorydetail(self):
@@ -94,6 +75,17 @@ class MainPage:
         PurchaseInventoryViewDetailsPanel(self)
     def showpricedetailstable(self):
          Pricedetailstable(self)
+
+    def showinventorydetails(self):
+        InventoryViewDetailsPanel(self)
+    
+    def showinventorydetailstable(self):
+         Inventorydetailstable(self)
+
+    def showoutofstockinventorydetailtable(self):
+         OutofStockInventorydetailstable(self)
+    
+
     
     def add(self):
         add_window = Toplevel()
@@ -198,58 +190,43 @@ class MainPage:
                 bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
 
     
-    # def showmemberinformation(self, monthsss):
-    #     showmemberinfo(self, 1, self.monthss.get(), self.shiftss.get())
-
-    # def fulldetailss(self, num):
-    #     fulldetails(self, num)
-    # def sendmain(self):
-    #     sendmail(self)
-    # def delete(self, num):
-    #     memberdelete(self, num)
-
-    # def paymentdetials(self):
-    #     PaymentPanel(self)
-
-    # def updtepayment(self, num):
-    #     UpdatePayments(self, num)
-
-    # def updatedb(self):
-    #     updateintodb(self)
-
-    # def updategetdatefrom(self):
-    #     updategetdatefrommember(self)
-
-    # def updategetdateto(self):
-    #     updategetdatetomember(self)
-
-    # def attendnce(self):
-    #     AttendencePanel(self)
-
-    # def showattendence(self, monthsss):
-    #     showmemberattendence(self, 1, self.shiftsss.get())
-
-    # def presentmemberss(self, num):
-    #     presentmembers(self, num)
-
-    # def deactivembr(self):
-    #     deactivatemember(self)
-
-    # def makesearch(self,event):
-    #     SearchMember(self,event)
-    #     SerchMemberDetials(self,self.lst)
-    # def updateaftrasbnt(self,num):
-    #     UpdatePaymentAfterAbsent(self, num)
-
-    # def updatedbs(self):
-    #     updateintodbss(self)
-    # def updategetdatefromabsnts(self):
-    #     updategetdatefrommemberabsnt(self)
-
-    # def updategetdatetoabsnts(self):
-    #     updategetdatetomemberabsnt(self)
 
     def close_window_mainmenu(self):
         self.Mainmenuroot.destroy()
+    
+    def sales_inventory(self,nr,quantity):
+        print(nr, quantity)
+        add_window = Toplevel()
+        add_window.title("Purchase")
+        add_window.geometry("300x200")
+        add_window.configure(bg="#FFFFFF")
+        
+        # Create entry fields
+        options = ["Select Quantity"] 
+        for i in range(1, quantity+1):  # Example loop to add quantities from 1 to 10
+            options.append(i) # Dropdown options
+        dropdown =Combobox(add_window, values=options, state="readonly")
+        dropdown.pack(pady=20)
+        dropdown.current(0)  
+
+        def save_new_record():
+            selected_value = dropdown.get()
+            if(selected_value == "Select Quantity"):
+                add_window.destroy()
+                messagebox.showerror("Error", "Please select a quantity")
+               
+            else:
+                add_window.destroy()
+                self.qr_window = Toplevel()
+                self.qr_window.title("QR Code Display")
+                display_qr(self.qr_window, selected_value,nr)
+
+
+        # Save button
+        Button(add_window, text="Save", command=save_new_record, 
+                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+        
+    def destroy_qr_window(self):
+        self.qr_window.destroy()
 
 
