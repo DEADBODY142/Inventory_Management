@@ -10,7 +10,6 @@ def SalesInventoryViewDetailsPanel(self):
     Label(Frame_Top, text="Sales Details", font=("Goudy old style", 15, "bold"), fg="#FFFFFF",
           bg="#F98C6E").place(
         x=10, y=15)
-    # self.showoutofstockinventorydetailtable()
 
     Frame_Downs = Frame(self.Frame_ViewMemberDetails, bg="#FFFFFF")
     Frame_Downs.place(x=0, y=60, width=950, height=950)
@@ -48,7 +47,7 @@ def SalesInventoryViewDetailsPanel(self):
     self.lengthofdata = len(self.datambr)
     row = 1
     for k in range(self.lengthofdata):
-        nr = self.datambr[k][0]
+        # nr = self.datambr[k][0]
         self.inv_id = k+1
         self.inv_name = self.datambr[k][1]
         self.inv_quantity = self.datambr[k][2]

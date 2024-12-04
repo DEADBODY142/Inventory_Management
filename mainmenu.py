@@ -212,7 +212,7 @@ class MainPage:
     # Create edit dialog window
         edit_window = Toplevel()
         edit_window.title("Edit Quantity Details")
-        edit_window.geometry("300x100")
+        edit_window.geometry("300x150")
         edit_window.configure(bg="#FFFFFF")
         
         # Get current values from database
@@ -263,13 +263,13 @@ class MainPage:
         print(nr, quantity)
         add_window = Toplevel()
         add_window.title("Purchase")
-        add_window.geometry("300x200")
+        add_window.geometry("300x150")
         add_window.configure(bg="#FFFFFF")
         
         # Create entry fields
         options = ["Select Quantity"] 
-        for i in range(1, quantity+1):  # Example loop to add quantities from 1 to 10
-            options.append(i) # Dropdown options
+        for i in range(1, quantity+1): 
+            options.append(i) 
         dropdown =Combobox(add_window, values=options, state="readonly")
         dropdown.pack(pady=20)
         dropdown.current(0)  

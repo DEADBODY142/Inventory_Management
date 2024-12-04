@@ -30,7 +30,7 @@ try:
         if stock_result:
             # Update quantity if item exists
             quantity = stock_result[0] + 1
-            connection.execute("update inventory_stock set quantity=? where name=?", (quantity, label))
+            connection.execute("update inventory_stock set quantity=?, price=? where name=?", (quantity,price_details, label))
             print(f"Data updated successfully for {label}")
         else:
             # Insert new item if it doesn't exist

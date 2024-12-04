@@ -1,7 +1,5 @@
 from tkinter import *
 from tkinter import messagebox
-import pandas as p
-from datetime import datetime
 from PIL import ImageTk,Image
 import sqlite3
 from mainmenu import MainPage
@@ -16,8 +14,6 @@ class Login:
         self.root.resizable(False, False)
         Frame_img = Frame(root, bg="#CF2F2F")
         Frame_img.place(x=0, y=0, width=500, height=600)
-        # photo = PhotoImage(file="../img/logo.png")
-        # varun_label = Label(image=photo).place(x=80, y=150, width=280, height=280)
         image = Image.open("images/logos/logo.jpg")
         resize_image = image.resize((280, 280))
         imgs = ImageTk.PhotoImage(resize_image)
@@ -40,9 +36,13 @@ class Login:
         self.password = Entry(Frame_MainLogin,show="*",font=("Goudy old style", 15), bg="#FFF9F9", highlightcolor="#EA7676",
                               highlightbackground="#EA7676", highlightthickness=1)
         self.password.place(x=70, y=250, width=260, height=50)
-        Button(Frame_MainLogin, command=self.check_function, text="Login", bd=0, font=("Goudy old style", 15),
-               bg="#CF2F2F",
-               fg="#F9F1F1").place(x=115, y=340, width=180, height=40)
+        login_button = Button(Frame_MainLogin, command=self.check_function, text="Login", bd=0, font=("Goudy old style", 15),
+               bg="#CF2F2F", fg="#F9F1F1")
+        login_button.place(x=115, y=340, width=180, height=40)
+
+        self.password.bind('<Return>', lambda event: self.check_function())
+        
+
 
     def check_function(self):
         self.user_name=self.username.get()

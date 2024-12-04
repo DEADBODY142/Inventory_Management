@@ -47,17 +47,6 @@ class Welcome:
         welcome_root.destroy()
 
 
-    # def run_scripts(self):
-    #     # Function to execute snapshot.py followed by object.py
-    #     try:
-    #         # subprocess.run(["python", "Login.py"], check=True)  
-    #         subprocess.run(["python", "snapshot.py"], check=True)  
-            
-    #         subprocess.run(["python", "build_scratch.py"], check=True)  
-    #     except subprocess.CalledProcessError as e:
-    #         print(f"An error occurred: {e}")
-    #     except FileNotFoundError as e:
-    #         print(f"Script not found: {e}")
 
 # Create the Tkinter root window and run the application
 welcome_root = Tk()

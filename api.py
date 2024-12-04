@@ -18,28 +18,39 @@ def run_query():
     conn = sqlite3.connect('db/inventory.db')
     cursor = conn.cursor()
 
-    # Example query (customize as needed)
     try:
         cursor.execute("SELECT name,price FROM inventory_stock WHERE id = ?", (query_id,))
         result = cursor.fetchone()
 
         if result:
             item_name = result[0]
-            item_price = result[1]  # Extract the item name from the result
-              # Extract the item name from the result
+            item_price = result[1]  
+            quan = int(query_quantity)
+            total_price = (item_price) * (quan)
 
-            # Step 2: Update the quantity in inventory_stock
+            # print(item_price, total_price)
+            print(f"item_price: {item_price}, type: {type(item_price)}")
+            print(f"query_quantity: {query_quantity}, type: {type(query_quantity)}")
+
             cursor.execute("UPDATE inventory_stock SET quantity = quantity - ? WHERE id = ?", (query_quantity, query_id))
             
-            # Commit the update
             conn.commit()
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            # Step 3: Insert the item name into another table (e.g., inventory_log)
             cursor.execute("INSERT INTO inventory_purchase (item, quantity,price,purchase_at) VALUES (?, ?,?,?)", (item_name, query_quantity,item_price,timestamp))
             
-            # Commit the insert
             conn.commit()
-            return "Sucessfully Purchased", 200
+            return f"""
+                    <div style="text-align: justify; font-size: 50px;">
+                        Successfully Purchased!<br>
+                        Item name: <b>{item_name}</b><br>
+                        Quantity: {query_quantity}<br>
+                        Total price: {total_price}<br>
+                        Purchased at: {timestamp}
+                    </div>
+                """, 200
+
+
+            # return "Sucessfully Purchased", 200
     except Exception as e:
         return {"error": str(e)}, 500
     finally:
