@@ -259,38 +259,100 @@ class MainPage:
     def close_window_mainmenu(self):
         self.Mainmenuroot.destroy()
     
-    def sales_inventory(self,nr,quantity):
-        print(nr, quantity)
+    # def sales_inventory(self,nr,quantity):
+    #     print(nr, quantity)
+    #     add_window = Toplevel()
+    #     add_window.title("Purchase")
+    #     add_window.geometry("300x150")
+    #     add_window.configure(bg="#FFFFFF")
+        
+    #     # Create entry fields
+    #     options = ["Select Quantity"] 
+    #     for i in range(1, quantity+1): 
+    #         options.append(i) 
+    #     dropdown =Combobox(add_window, values=options, state="readonly")
+    #     dropdown.pack(pady=20)
+    #     dropdown.current(0)  
+
+    #     def save_new_record():
+    #         selected_value = dropdown.get()
+    #         if(selected_value == "Select Quantity"):
+    #             add_window.destroy()
+    #             messagebox.showerror("Error", "Please select a quantity")
+               
+    #         else:
+    #             add_window.destroy()
+    #             self.qr_window = Toplevel()
+    #             self.qr_window.title("QR Code Display")
+    #             display_qr(self.qr_window, selected_value,nr)
+
+
+    #     # Save button
+    #     Button(add_window, text="Save", command=save_new_record, 
+    #             bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
+        
+    def sales_inventory(self, nr, quantity):
+    # Initialize or access the cart dictionary to store items and quantities
+        if not hasattr(self, 'cart'):
+            self.cart = {}  # {'item_id': quantity}
+
         add_window = Toplevel()
-        add_window.title("Purchase")
+        add_window.title("Add Item to Cart")
         add_window.geometry("300x150")
         add_window.configure(bg="#FFFFFF")
-        
-        # Create entry fields
-        options = ["Select Quantity"] 
-        for i in range(1, quantity+1): 
-            options.append(i) 
-        dropdown =Combobox(add_window, values=options, state="readonly")
+
+        # Create dropdown for quantity selection
+        options = ["Select Quantity"]
+        for i in range(1, quantity + 1):
+            options.append(i)
+        dropdown = Combobox(add_window, values=options, state="readonly")
         dropdown.pack(pady=20)
-        dropdown.current(0)  
+        dropdown.current(0)
 
-        def save_new_record():
+        def add_to_cart():
             selected_value = dropdown.get()
-            if(selected_value == "Select Quantity"):
-                add_window.destroy()
-                messagebox.showerror("Error", "Please select a quantity")
-               
+            if selected_value == "Select Quantity":
+                messagebox.showerror("Error", "Please select a valid quantity")
             else:
-                add_window.destroy()
-                self.qr_window = Toplevel()
-                self.qr_window.title("QR Code Display")
-                display_qr(self.qr_window, selected_value,nr)
+                # Add the item to the cart
+                self.cart[nr] = int(selected_value)
+                db_connection = sqlite3.connect('db/inventory.db')
+                connection = db_connection.cursor()
+                connection.execute("select name from inventory_stock where id=?", (nr,))
+                result = connection.fetchone()
+                item_name = result[0]
+                messagebox.showinfo("Success", f" {selected_value} {item_name} added to cart ")
+            add_window.destroy()
 
+        # Add to Cart button
+        Button(
+            add_window,
+            text="Add to Cart",
+            command=add_to_cart,
+            bg="#4CAF50",
+            fg="white",
+            font=("Goudy old style", 12)
+        ).pack(pady=20)
 
-        # Save button
-        Button(add_window, text="Save", command=save_new_record, 
-                bg="#4CAF50", fg="white", font=("Goudy old style", 12)).pack(pady=20)
-        
+    def generate_qr_for_cart(self):
+        if not hasattr(self, 'cart') or not self.cart:
+            messagebox.showerror("Error", "Cart is empty! Add items before generating QR.")
+            return
+
+        # Combine cart data into a structured payload
+        cart_payload = [{"id": item_id, "quantity": quantity} for item_id, quantity in self.cart.items()]
+        # cart_payload = {
+        #     "items": [{"id": item_id, "quantity": quantity} for item_id, quantity in self.cart.items()]
+        # }
+        print(cart_payload)
+        # Open QR display window
+        self.qr_window = Toplevel()
+        self.qr_window.title("QR Code for Cart")
+        display_qr(self.qr_window, cart_payload)
+
+        # Optionally, clear the cart after QR is generated
+        self.cart.clear()
+
     def destroy_qr_window(self):
         self.qr_window.destroy()
 
