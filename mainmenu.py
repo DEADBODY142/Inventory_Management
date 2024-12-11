@@ -110,6 +110,11 @@ class MainPage:
                 return
             conn = sqlite3.connect('db/inventory.db')
             c = conn.cursor()
+            c.execute('SELECT name FROM inventory_price WHERE name = ?', (new_name,))
+            existing_name = c.fetchone()
+            if existing_name:
+                messagebox.showerror("Duplicate Name", "A record with the same name already exists.")
+                return
             c.execute("INSERT INTO inventory_price (name, price) VALUES (?, ?)", 
                     (new_name, new_price))
             conn.commit()

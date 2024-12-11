@@ -13,10 +13,10 @@ class Register:
         Frame_register = Frame(root, bg="#F1D9D9")
         Frame_register.place(x=0, y=0, width=1500, height=600)
         Frame_MainRegister = Frame(root, bg="#F9F1F1")
-        Frame_MainRegister.place(x=440, y=80, width=380, height=500)
+        Frame_MainRegister.place(x=440, y=50, width=380, height=500)
 
         # Registration form elements
-        Label(Frame_MainRegister, text="Create Account", font=("Goudy old style", 15, "bold"), fg="black", bg="#F9F1F1").place(relx=0.5,anchor="center", y=30)
+        Label(Frame_MainRegister, text="Create Account", font=("Goudy old style", 18, "bold"), fg="black", bg="#F9F1F1").place(relx=0.5,anchor="center", y=30)
         
         Label(Frame_MainRegister, text="Username", font=("Goudy old style", 15, "bold"), fg="black", bg="#F9F1F1").place(x=145, y=70)
         self.username = Entry(Frame_MainRegister, font=("Goudy old style", 15), bg="#FFF9F9", highlightcolor="#EA7676",
@@ -40,11 +40,11 @@ class Register:
 
         register_button = Button(Frame_MainRegister, command=self.register_user, text="Register", bd=0, 
                                font=("Goudy old style", 15), bg="#CF2F2F", fg="#F9F1F1")
-        register_button.place(x=115, y=390, width=180, height=40)
+        register_button.place(relx=0.5,anchor="center", y=420, width=180, height=40)
 
         back_label = Label(Frame_MainRegister, text="Back to Login", font=("Goudy old style", 12, "underline"), 
                           fg="#CF2F2F", bg="#F9F1F1", cursor="hand2")
-        back_label.place(x=160, y=440)
+        back_label.place(relx=0.5,anchor="center", y=460)
         back_label.bind('<Button-1>', lambda e: self.back_to_login())
 
     def register_user(self):

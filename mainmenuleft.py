@@ -1,5 +1,5 @@
 from tkinter import *
-
+import sqlite3
 
 def leftPanel(self):
     self.Frame_left = Frame(self.Mainmenuroot, bg="#343434")
@@ -17,9 +17,10 @@ def leftPanel(self):
     Button(self.Frame_left, text="OOS Inventory", bd=0, command=self.showoutofstockdetails, font=("Goudy old style", 18),
            fg="white",
            bg="#343434").place(x=35, y=450)
-    Button(self.Frame_left, text="Inventory Price", command=self.showpricedetails, bd=0, font=("Goudy old style", 18),
-           fg="white",
-           bg="#343434").place(x=35, y=500)
+    if self.usr=="admin":
+       Button(self.Frame_left, text="Inventory Price", command=self.showpricedetails, bd=0, font=("Goudy old style", 18),
+              fg="white",
+              bg="#343434").place(x=35, y=500)
     Button(self.Frame_left, text="Log Out", command=self.logout, bd=0, font=("Goudy old style", 15),
            bg="white",
            fg="red").place(x=40, y=580, width=150, height=40)

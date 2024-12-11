@@ -14,11 +14,11 @@ class Login:
         self.root.resizable(False, False)
         Frame_img = Frame(root, bg="#CF2F2F")
         Frame_img.place(x=0, y=0, width=500, height=600)
-        image = Image.open("images/logos/logo.jpg")
+        image = Image.open("images/logos/olive.png")
         resize_image = image.resize((280, 280))
         imgs = ImageTk.PhotoImage(resize_image)
         label1 = Label(Frame_img, image=imgs)
-        label1.place(x=80, y=150, width=280, height=280)
+        label1.place(x=100, y=150, width=280, height=280)
         label1.image = imgs
         Frame_login = Frame(root, bg="#F1D9D9")
         Frame_login.place(x=500, y=0, width=800, height=600)

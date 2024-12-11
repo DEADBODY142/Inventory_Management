@@ -1,6 +1,6 @@
 # %%
 from datetime import datetime
-import os
+# import os
 import numpy as np
 from keras.layers import Conv2D, Input, BatchNormalization, LeakyReLU, ZeroPadding2D, UpSampling2D
 from keras.layers import add, concatenate
@@ -13,9 +13,7 @@ from snapshot import filename
 # ### Pre-trained Weights from the repository
 # **Note:** Refer to the following [link](https://pjreddie.com/darknet/yolo/)
 
-# ### Create a class WeightReader to load the pre-trained weights for yolov3
-# WeightReader class will parse the file and load the model weights into memory to set it in our Keras model.
-# We will be reading the original weights of Yolo. The original network was not trained in Keras and thus we define a special class to read weights.
+
 
 # * class to load the pretrained Weights
 class WeightReader:
@@ -92,11 +90,11 @@ def _conv_block(inp, convs, skip=True):
             skip_connection = x
         count += 1
 
-        if conv['stride'] > 1: x = ZeroPadding2D(((1,0),(1,0)))(x) # peculiar padding as darknet prefer left and top
+        if conv['stride'] > 1: x = ZeroPadding2D(((1,0),(1,0)))(x) 
         x = Conv2D(conv['filter'],
                    conv['kernel'],
                    strides=conv['stride'],
-                   padding='valid' if conv['stride'] > 1 else 'same', # peculiar padding as darknet prefer left and top
+                   padding='valid' if conv['stride'] > 1 else 'same', 
                    name='conv_' + str(conv['layer_idx']),
                    use_bias=False if conv['bnorm'] else True)(x)
         if conv['bnorm']: x = BatchNormalization(epsilon=0.001, name='bnorm_' + str(conv['layer_idx']))(x)
@@ -106,7 +104,6 @@ def _conv_block(inp, convs, skip=True):
 
 # Next, we create a Darknet with 108 convolutional layers.
 
-# %%
 def make_yolov3_model():
     input_image = Input(shape=(None, None, 3))
 
@@ -216,8 +213,6 @@ weight_reader.load_weights(yolov3)
 # save the model to file
 # yolov3.save('model.h5')
 
-# %% [markdown]
-# Download a sample image from the Web, or upload your image to pass through the model to get a prediction.
 
 
 image_path = filename
@@ -226,7 +221,6 @@ image_path = filename
 # 
 # We need to preprocess the image before passing through the network to ensure the shape of the image changes uniformly throughout the network.
 
-# %%
 def preprocess_input(image, net_h, net_w):
     new_h, new_w, _ = image.shape
 
@@ -258,7 +252,7 @@ image = cv2.resize(image, (416, 416))
 
 image_h, image_w, _ = image.shape  # Storing height and width of input image
 new_image = preprocess_input(image, net_h, net_w) #  pre-processing
-new_image.shape
+# new_image.shape
 
 # ## Getting prediction output from the Yolo network
 
@@ -277,7 +271,6 @@ print([a.shape for a in y_pred])
 # 
 # BoundBox defines the corners of each bounding box in the context of the input image shape and class probabilities.
 
-# %%
 class BoundBox:
     def __init__(self, xmin, ymin, xmax, ymax, objness = None, classes = None):
         self.xmin = xmin
@@ -308,14 +301,10 @@ class BoundBox:
 # * Sigmoid function
 # * _interval_overlap : Checks if two intervals overlap. Two intervals do not overlap when one ends before the other begins.
 # * bbox_iou : Calculates intersection over union(IoU) of two boxes.
-# 
-# [Reference: IoU](https://learnopencv.com/intersection-over-union-iou-in-object-detection-and-segmentation/)
 
-# %%
 def _sigmoid(x):
     return 1. / (1. + np.exp(-x))
 
-# %%
 def _interval_overlap(interval_a, interval_b):
     x1, x2 = interval_a
     x3, x4 = interval_b
@@ -346,7 +335,7 @@ def bbox_iou(box1, box2):
 
     return float(intersect) / union
 
-# ### Non-Max Suppression
+# * Non-Max Suppression
 # 
 # It takes boxes that have the presence of objects in them along with non-max threshold as a parameter.
 # 
@@ -377,13 +366,12 @@ def do_nms(boxes, nms_thresh):
 
 # This will leave us with the same number of boxes, but only very few of interest. We can retrieve just those boxes that strongly predict the presence of an object: that is are more than 60% confident. This can be achieved by enumerating all boxes and checking the class prediction values. We can then look up the corresponding class label for the box and add it to the list. Each box must be considered for each class label, just in case the same box strongly predicts more than one object.
 
-# ### Decode the output of the network:
+# * Decode the output of the network:
 # 
 # We will iterate through each of the NumPy arrays, one at a time, and decode the candidate bounding boxes and class predictions based on the object threshold.
 # 
 # The first 4 elements will be the coordinates of the Bounding box, and 5th element will be the object score followed by the class probabilities.
 
-# %%
 def decode_netout(netout, anchors, obj_thresh, nms_thresh, net_h, net_w):
     grid_h, grid_w = netout.shape[:2]
     nb_box = 3
@@ -426,7 +414,7 @@ def decode_netout(netout, anchors, obj_thresh, nms_thresh, net_h, net_w):
 
     return boxes
 
-# ### Correcting the Yolo boxes.
+# * Correcting the Yolo boxes.
 # 
 # We have the bounding boxes but they need to be stretched back into the shape of the original image. This will allow plotting the original image and drawing the bounding boxes, detecting real objects.
 # 
@@ -450,7 +438,7 @@ def correct_yolo_boxes(boxes, image_h, image_w, net_h, net_w):
         boxes[i].ymin = int((boxes[i].ymin - y_offset) / y_scale * image_h)
         boxes[i].ymax = int((boxes[i].ymax - y_offset) / y_scale * image_h)
 
-# ### Drawing a white box around the object present in the image
+# * Drawing a white box around the object present in the image
 #       
 # The below function is implemented by taking the filename of the original. photograph and the parallel lists of bounding boxes, labels, and scores, and create a plot showing all detected objects.
 # %%
@@ -482,7 +470,7 @@ def draw_boxes(image, boxes, llabels, obj_thresh):
                         (0,255,0), 2)
     return image
 
-# ## Getting bounding box and prediction
+# * Getting bounding box and prediction
 # 
 # Now, we are going to use all the above functions to get the final output as object detection from the **y_pred**, that we got from the YOLO_v3 model initially by passing an image.
 # 
@@ -501,32 +489,31 @@ anchors = [[116,90,  156,198,  373,326],  [30,61, 62,45,  59,119], [10,13,  16,3
 
 # Then define the 80 labels for the Common Objects in Context (COCO) model to predict
 # The following 80 classes are available using COCO’s pretrained weights:
-labels = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", \
-          "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", \
-          "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", \
-          "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", \
-          "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", \
-          "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", \
-          "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", \
-          "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse", \
-          "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", \
-          "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+# labels = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "train", "truck", \
+#           "boat", "traffic light", "fire hydrant", "stop sign", "parking meter", "bench", \
+#           "bird", "cat", "dog", "horse", "sheep", "cow", "elephant", "bear", "zebra", "giraffe", \
+#           "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", \
+#           "sports ball", "kite", "baseball bat", "baseball glove", "skateboard", "surfboard", \
+#           "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", \
+#           "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", \
+#           "chair", "sofa", "pottedplant", "bed", "diningtable", "toilet", "tvmonitor", "laptop", "mouse", \
+#           "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "sink", "refrigerator", \
+#           "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
 
 llabels = ["", "", "", "", "", "", "", "", \
           "", "", "", "", "", "bench", \
           "", "", "", "", "", "", "", "", "", "", \
           "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", \
-          "sports ball", "kite", "baseball bat","baseball glove", "skateboard", "surfboard", \
-          "tennis racket", "bottle", "wine glass", "cup", "fork", "knife", "spoon", "bowl", "banana", \
-          "apple", "sandwich", "orange", "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", \
+          "sports_ball", "kite", "baseball_bat","baseball glove", "skateboard", "surfboard", \
+          "tennis_racket", "bottle", "wine_glass", "cup", "fork", "knife", "spoon", "bowl", "banana", \
+          "apple", "sandwich", "orange", "broccoli", "carrot", "hot_dog", "pizza", "donut", "cake", \
           "chair", "sofa", "pottedplant", "bed", "diningtable", "", "tvmoitor", "laptop", "mouse", \
-          "remote", "keyboard", "cell phone", "microwave", "oven", "toaster", "", "refrigerator", \
-          "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
+          "remote", "keyboard", "cell_phone", "microwave", "oven", "toaster", "", "refrigerator", \
+          "book", "clock", "vase", "scissors", "teddy_bear", "hair_drier", "toothbrush"]
 
 
 # ### We have already created a model and passed the image, now predicting the bounding box:
 
-# %%
 # summarize the shape of the list of arrays that we got from model as y_pred
 # print([a.shape for a in y_pred])
 
@@ -551,11 +538,8 @@ cv2.imwrite(save_file, (image).astype('uint8'))
 # write the image with bounding boxes to file
 # cv2.imwrite('images/analysis_image/' + image_path[:-4] + '_detected' + image_path[-4:], (image).astype('uint8'))
 
-# %% [markdown]
 # ### Plotting the Final Result
-# We plot the final output from the network. Please change the name of the detected image in order to plot your own result!
 
-# %%
 import cv2
 
 # x = cv2.imread(image_path[:-4]+"_detected.jpg")
@@ -565,18 +549,7 @@ cv2.waitKey(0)  # Add this line to keep window open
 cv2.destroyAllWindows()  # Add this line to clean up
 
 
-# %%
-# preprocess the image
-# Input image size for Yolov3 is 416 x 416 which we set using net_h and net_w.
-net_h, net_w = 416, 416
-image = cv2.imread(image_path) # reading input image
-image = cv2.resize(image, (416, 416))
 
-image_h, image_w, _ = image.shape  # Storing height and width of input image
-new_image = preprocess_input(image, net_h, net_w) #  pre-processing
-new_image.shape
-
-# %% [markdown]
 # #### References
 # 
 # 1. [YOLOv3 Object Detection with Keras](https://towardsdatascience.com/yolo-v3-object-detection-with-keras-461d2cfccef6)

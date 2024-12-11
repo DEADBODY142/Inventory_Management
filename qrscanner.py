@@ -39,17 +39,6 @@ import qrcode
 
 # Generate QR code for a cart
 def generate_qr(cart):
-    """
-    Args:
-        cart (dict): A dictionary with a key 'items' containing a list of item dictionaries, e.g.,
-                     {"items": [{"id": 1, "quantity": 4}, {"id": 2, "quantity": 2}]}
-    Returns:
-        tk.PhotoImage: QR code image ready for Tkinter display.
-    """
-    # Extract the items list
-    # items = cart.get("items", [])
-    # if not isinstance(items, list) or not all(isinstance(item, dict) for item in items):
-    #     raise ValueError("Cart must contain an 'items' key with a list of dictionaries.")
     if not isinstance(cart, list) or not all(isinstance(item, dict) for item in cart):
         raise ValueError("Cart must be a list of dictionaries with 'id' and 'quantity' keys.")
 
