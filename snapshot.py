@@ -28,6 +28,8 @@ while True:
             cv2.imwrite(filename, frame)
             print(f"Snapshot saved as '{filename}'.")
             break
+        elif key == ord('q'):
+            break
     else:
         print("Error: Unable to capture image.")
         break

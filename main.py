@@ -6,7 +6,7 @@ from login import Login
 class Welcome:
     def __init__(self, root):
         self.root = root
-        self.root.title("Welcome Page")
+        self.root.title("Welcome")
         self.root.geometry("1199x600+100+50")
         # Disable resizing
         self.root.resizable(False, False)
@@ -19,12 +19,12 @@ class Welcome:
         # Title
         title = Label(
             Frame_Welcome, 
-            text="Inventory Management Software", 
+            text="OLIVE MART\nInventory Management Software", 
             font=("Goudy Old Style", 45), 
             fg="black", 
             bg="#F1D9D9"
         )
-        title.place(x=210, y=200)
+        title.place(relx=0.5, anchor=CENTER, y=220)
 
         # Get Started button
         Button(

@@ -17,9 +17,9 @@ def timeloop(self):
     label1.image = img
     Label(Frame_photo, text=self.name, font=("Goudy old style", 15, "bold"), fg="#F25125",
           bg="#FFFFFF").place(
-        x=23, y=200)
+        relx=0.5,anchor="center", y=210)
     Label(Frame_photo, text=self.usr, font=("Goudy old style", 13, "bold"), fg="#F25125", bg="#FFFFFF").place(
-        x=70, y=225)
+        relx=0.5,anchor="center", y=235)
     if (int(strftime('%S')) % 2 == 0):
         time_string = strftime('%A  %I:%M %p')
     else:
