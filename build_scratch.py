@@ -10,10 +10,6 @@ import cv2
 import keras
 from snapshot import filename
 
-# ### Pre-trained Weights from the repository
-# **Note:** Refer to the following [link](https://pjreddie.com/darknet/yolo/)
-
-
 
 # * class to load the pretrained Weights
 class WeightReader:
@@ -77,7 +73,6 @@ class WeightReader:
         self.offset = 0
 
 # * Create the Yolo v3 model
-# We first create a function for creating the Convolutional blocks and then define the blocks required for the YOLO model.
 # * _conv_block function which is used to construct a convolutional layer
 # * make_yolov3_model function which is used to create layers of convolutional and stack together as a whole.
 
@@ -217,8 +212,7 @@ weight_reader.load_weights(yolov3)
 
 image_path = filename
 
-# ### Preprocessing the Input Image
-# 
+# * Preprocessing the Input Image
 # We need to preprocess the image before passing through the network to ensure the shape of the image changes uniformly throughout the network.
 
 def preprocess_input(image, net_h, net_w):
@@ -261,14 +255,8 @@ y_pred = yolov3.predict(new_image) # img_tensor
 # summarize the shape of the list of arrays
 print([a.shape for a in y_pred])
 
-# ## Decoding the output into boxes
-# 
-# The output of the YOLO v3 prediction is in the form of a list of arrays that are hard to be interpreted. As YOLO v3 is a multi-scale detection, it is decoded into three different scales in the shape of (13, 13, 225), (26, 26, 225), and (52, 52, 225).
-# 
-# We need to create a few helping classes & functions to get output as a bounding box and prediction.
 
-# ### Create a class for the Bounding Box
-# 
+# * Create a class for the Bounding Box
 # BoundBox defines the corners of each bounding box in the context of the input image shape and class probabilities.
 
 class BoundBox:
@@ -296,7 +284,6 @@ class BoundBox:
 
 # * Intersection over Union(IoU) calculation
 # 
-# The following functions help in calculating IoU:
 # 
 # * Sigmoid function
 # * _interval_overlap : Checks if two intervals overlap. Two intervals do not overlap when one ends before the other begins.
@@ -337,11 +324,6 @@ def bbox_iou(box1, box2):
 
 # * Non-Max Suppression
 # 
-# It takes boxes that have the presence of objects in them along with non-max threshold as a parameter.
-# 
-# The model has predicted a lot of candidate bounding boxes, and most of the boxes will be referring to the same objects. The list of bounding boxes can be filtered and those boxes that overlap and refer to the same object can be merged. We can define the amount of overlap as a configuration parameter, in this case, 50% or 0.5. This filtering of bounding box regions is generally referred to as non-maximal suppression and is a required post-processing step.
-# 
-# Rather than purging the overlapping boxes, their predicted probability for their overlapping class is cleared. This allows the boxes to remain and be used if they also detect another object type.
 # 
 
 def do_nms(boxes, nms_thresh):
@@ -364,11 +346,9 @@ def do_nms(boxes, nms_thresh):
                 if bbox_iou(boxes[index_i], boxes[index_j]) >= nms_thresh:
                     boxes[index_j].classes[c] = 0
 
-# This will leave us with the same number of boxes, but only very few of interest. We can retrieve just those boxes that strongly predict the presence of an object: that is are more than 60% confident. This can be achieved by enumerating all boxes and checking the class prediction values. We can then look up the corresponding class label for the box and add it to the list. Each box must be considered for each class label, just in case the same box strongly predicts more than one object.
 
 # * Decode the output of the network:
 # 
-# We will iterate through each of the NumPy arrays, one at a time, and decode the candidate bounding boxes and class predictions based on the object threshold.
 # 
 # The first 4 elements will be the coordinates of the Bounding box, and 5th element will be the object score followed by the class probabilities.
 
@@ -415,11 +395,6 @@ def decode_netout(netout, anchors, obj_thresh, nms_thresh, net_h, net_w):
     return boxes
 
 # * Correcting the Yolo boxes.
-# 
-# We have the bounding boxes but they need to be stretched back into the shape of the original image. This will allow plotting the original image and drawing the bounding boxes, detecting real objects.
-# 
-# 
-
 # correct the sizes of the bounding boxes for the shape of the image
 def correct_yolo_boxes(boxes, image_h, image_w, net_h, net_w):
     if (float(net_w)/image_w) < (float(net_h)/image_h):
@@ -467,7 +442,7 @@ def draw_boxes(image, boxes, llabels, obj_thresh):
                         (box.xmin, box.ymin - 13),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1e-3 * image.shape[0],
-                        (0,255,0), 2)
+                        (255,255,255), 1)
     return image
 
 # * Getting bounding box and prediction
@@ -483,8 +458,6 @@ net_h, net_w = 416, 416
 obj_thresh, nms_thresh = 0.5, 0.45
 
 # We set the anchor boxes
-# Anchor Boxes used to predict bounding boxes, YOLOv3 uses predefined bounding boxes
-# called as anchors/priors and also these anchors/priors are used to calculate real width and real height for predicted bounding boxes.
 anchors = [[116,90,  156,198,  373,326],  [30,61, 62,45,  59,119], [10,13,  16,30,  33,23]]
 
 # Then define the 80 labels for the Common Objects in Context (COCO) model to predict
@@ -501,15 +474,15 @@ anchors = [[116,90,  156,198,  373,326],  [30,61, 62,45,  59,119], [10,13,  16,3
 #           "book", "clock", "vase", "scissors", "teddy bear", "hair drier", "toothbrush"]
 
 llabels = ["", "", "", "", "", "", "", "", \
-          "", "", "", "", "", "bench", \
+          "", "", "", "", "", "", \
           "", "", "", "", "", "", "", "", "", "", \
-          "backpack", "umbrella", "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard", \
-          "sports_ball", "kite", "baseball_bat","baseball glove", "skateboard", "surfboard", \
-          "tennis_racket", "bottle", "wine_glass", "cup", "fork", "knife", "spoon", "bowl", "banana", \
-          "apple", "sandwich", "orange", "broccoli", "carrot", "hot_dog", "pizza", "donut", "cake", \
-          "chair", "sofa", "pottedplant", "bed", "diningtable", "", "tvmoitor", "laptop", "mouse", \
-          "remote", "keyboard", "cell_phone", "microwave", "oven", "toaster", "", "refrigerator", \
-          "book", "clock", "vase", "scissors", "teddy_bear", "hair_drier", "toothbrush"]
+          "backpack", "umbrella", "handbag", "tie", "suitcase", "", "", "", \
+          "sports_ball", "kite", "baseball_bat","", "", "", \
+          "tennis_racket", "bottle", "", "cup", "fork", "knife", "spoon", "", "banana", \
+          "apple", "", "orange", "", "carrot", "", "pizza", "donut", "cake", \
+          "chair", "", "", "bed", "", "", "tvmoitor", "laptop", "mouse", \
+          "remote", "keyboard", "cell_phone", "", "", "", "", "", \
+          "book", "clock", "vase", "scissors", "teddy_bear", "", "toothbrush"]
 
 
 # ### We have already created a model and passed the image, now predicting the bounding box:
@@ -550,9 +523,4 @@ cv2.destroyAllWindows()  # Add this line to clean up
 
 
 
-# #### References
-# 
-# 1. [YOLOv3 Object Detection with Keras](https://towardsdatascience.com/yolo-v3-object-detection-with-keras-461d2cfccef6)
-# 
-# 2. [The beginner’s guide to implementing YOLOv3]( https://machinelearningspace.com/yolov3-tensorflow-2-part-1/#nms-unique)
 
